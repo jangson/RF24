@@ -24,6 +24,8 @@ else ifeq ($(DRIVER), RPi)
 OBJECTS+=spi.o bcm2835.o interrupt.o
 else ifeq ($(DRIVER), SPIDEV)
 OBJECTS+=spi.o gpio.o compatibility.o interrupt.o
+else ifeq ($(DRIVER), tmk)
+OBJECTS+=spi.o
 endif
 
 # make all
@@ -37,13 +39,13 @@ $(LIBNAME): $(OBJECTS)
 
 # Library parts
 RF24.o: RF24.cpp	
-	$(CXX) -fPIC $(CFLAGS) -c $^
+	$(CXX) $(CFLAGS) -c $^
 
 bcm2835.o: $(DRIVER_DIR)/bcm2835.c
 	$(CC) -fPIC $(CFLAGS) -c $^
 
 spi.o: $(DRIVER_DIR)/spi.cpp
-	$(CXX) -fPIC $(CFLAGS) -c $^
+	$(CXX) $(CFLAGS) -c $^
 
 compatibility.o: $(DRIVER_DIR)/compatibility.c
 	$(CC) -fPIC  $(CFLAGS) -c $(DRIVER_DIR)/compatibility.c
