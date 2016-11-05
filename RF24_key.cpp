@@ -25,8 +25,9 @@ extern "C" void radio_init_key() {
 	radio.setDataRate(RF24_2MBPS);
 	radio.setCRCLength(RF24_CRC_16);
 	radio.setAutoAck(1);                    // Ensure autoACK is enabled
-	radio.enableAckPayload();               // Allow optional ack payloads
 	radio.enableDynamicPayloads();
+	// radio.enableAckPayload();               // Allow optional ack payloads
+    // radio.enableDynamicAck();
 
 	radio.openWritingPipe(pipe0); // open pipe0 for writing
 

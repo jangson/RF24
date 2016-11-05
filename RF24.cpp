@@ -394,7 +394,7 @@ void RF24::print_status(uint8_t status)
 
 void RF24::print_observe_tx(uint8_t value)
 {
-  printf_P(PSTR("OBSERVE_TX=%02X: POLS_CNT=%x ARC_CNT=%x\n"),
+  printf_P(PSTR("OBSERVE_TX=%02X: POLS_CNT=%X ARC_CNT=%X\n"),
            value,
            (value >> PLOS_CNT) & 0b1111,
            (value >> ARC_CNT) & 0b1111
@@ -858,7 +858,7 @@ bool RF24::write( const void* buf, uint8_t len, const bool multicast )
 		uint32_t timer = millis();
 	#endif 
 	
-	while( ! ( get_status()  & ( _BV(TX_DS) | _BV(MAX_RT) ))) { 
+	while( ! ( get_status()  & ( _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) ))) { 
 		#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 			if(millis() - timer > 95){			
 				errNotify();
@@ -881,12 +881,12 @@ bool RF24::write( const void* buf, uint8_t len, const bool multicast )
 	ce(LOW);
 
 	uint8_t status = write_register(NRF_STATUS,_BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );
-
-  //Max retries exceeded
-  if( status & _BV(MAX_RT)){
-   	flush_tx(); //Only going to be 1 packet int the FIFO at a time using this method, so just flush
-  	return 0;
-  }
+    //Max retries exceeded
+    if( status & _BV(MAX_RT)){
+        flush_tx(); //Only going to be 1 packet int the FIFO at a time using this method, so just flush
+        printf_P(PSTR("max retry exceeded\n"));
+        return 0;
+    }
   //TX OK 1 or 0
   return 1;
 }
